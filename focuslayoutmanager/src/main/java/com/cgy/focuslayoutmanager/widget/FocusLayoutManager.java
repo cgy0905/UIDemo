@@ -118,7 +118,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         this(new Builder());
     }
 
-    public FocusLayoutManager(Builder builder) {
+    private FocusLayoutManager(Builder builder) {
         this.maxLayerCount = builder.maxLayerCount;
         this.focusOrientation = builder.focusOrientation;
         this.layerPadding = builder.layerPadding;
@@ -751,7 +751,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 l = getPaddingLeft();
                 t = (int) (startY - getDecoratedMeasurementVertical(item));
                 r = getPaddingLeft() + getDecoratedMeasurementHorizontal(item);
-                b = (int) startY;
+                b = (int) (startY);
                 layoutDecoratedWithMargins(item, l, t, r, b);
             } else {
                 //属于普通区域
@@ -780,7 +780,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 l = getPaddingLeft();
                 t = (int) (startY - getDecoratedMeasurementVertical(item));
                 r = getPaddingLeft() + getDecoratedMeasurementHorizontal(item);
-                b = (int) startY;
+                b = (int) (startY);
                 layoutDecoratedWithMargins(item, l, t, r, b);
 
                 //判断下一个view的布局位置是不是已经超出屏幕了,若超出,修正mLastVisPos并跳出遍历
@@ -806,7 +806,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         if (widthMode == View.MeasureSpec.AT_MOST && (focusOrientation == FOCUS_LEFT || focusOrientation == FOCUS_RIGHT)) {
             if (BuildConfig.DEBUG) {
                 throw new RuntimeException("FocusLayoutManager-onMeasure:当滚动方向为水平时，recyclerView" +
-                        "                        的宽度请不要使用wrap_content");
+                        "的宽度请不要使用wrap_content");
             } else {
                 Log.e(TAG, "FocusLayoutManager-onMeasure:当滚动方向为水平时，recyclerView" +
                         "的宽度请不要使用wrap_content");
@@ -851,7 +851,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
             case RecyclerView.SCROLL_STATE_IDLE:
                 //当列表滚动停止后,判断一下自动选中是否打开
                 if (isAutoSelect) {
-                    //找到离目标落点最近的item
+                    //找到离目标落点最近的item索引
                     smoothScrollToPosition(findShouldSelectPosition());
                 }
                 break;
@@ -903,7 +903,6 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        super.smoothScrollToPosition(recyclerView, state, position);
 
         smoothScrollToPosition(position);
     }
@@ -974,6 +973,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 }
             }
         });
+        selectAnimator.start();
 
     }
 
@@ -1451,7 +1451,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
              * 期望效果：从0%开始到{@link SimpleTransitionListener#getLayerChangeRangePercent()} 期间
              * view均匀完成渐变，之后一直保持不变
              */
-            //转换为真是的渐变变化百分比
+            //转换为真实的渐变变化百分比
             float realFraction;
             if (fraction <= stl.getLayerChangeRangePercent()) {
                 realFraction = fraction / stl.getLayerChangeRangePercent();
