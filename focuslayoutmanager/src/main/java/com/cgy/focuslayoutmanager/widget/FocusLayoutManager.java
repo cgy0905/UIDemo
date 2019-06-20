@@ -759,7 +759,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 addView(item);
                 measureChildWithMargins(item, 0, 0);
 
-                startY += onceCompleteScrollLength;
+                startY -= onceCompleteScrollLength;
                 if (!isNormalViewOffsetSet) {
                     startY -= layerViewOffset;
                     startY += normalViewOffset;

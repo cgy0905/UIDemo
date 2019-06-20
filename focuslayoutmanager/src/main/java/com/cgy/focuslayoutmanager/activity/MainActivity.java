@@ -21,8 +21,9 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
-import com.cgy.focuslayoutmanager.FocusLayoutManager;
+import com.cgy.focuslayoutmanager.widget.FocusLayoutManager;
 import com.cgy.focuslayoutmanager.R;
 
 import java.util.ArrayList;
