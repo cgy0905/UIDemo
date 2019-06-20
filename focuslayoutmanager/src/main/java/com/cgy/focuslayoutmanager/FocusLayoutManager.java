@@ -22,6 +22,7 @@ import java.util.List;
  * Created by ccy(17022) on 2019/5/18 下午5:07
  */
 public class FocusLayoutManager extends RecyclerView.LayoutManager {
+
     public static final String TAG = "FocusLayoutManager";
     /**
      * 堆叠方向在左
@@ -65,7 +66,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
      */
     private boolean isAutoSelect;
     /**
-     * 变换监听接口。
+     * 变换监听接口
      */
     private List<TransitionListener> transitionListeners;
     /**
@@ -109,7 +110,6 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
     public @interface FocusOrientation {
     }
 
-
     public FocusLayoutManager() {
         this(new Builder());
     }
@@ -141,7 +141,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         }
 
         onceCompleteScrollLength = -1;
-        //分离全部已有的view，放入临时缓存
+        //分离全部已有的view,放入临时缓存
         detachAndScrapAttachedViews(recycler);
 
         fill(recycler, state, 0);
@@ -161,7 +161,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler,
                                     RecyclerView.State state) {
-        //手指从右向左滑动，dx > 0; 手指从左向右滑动，dx < 0;
+        //手指从右向左滑动 dx > 0; 手指从左向右滑动 dx < 0;
 
         //位移0、没有子View 当然不移动
         if (dx == 0 || getChildCount() == 0) {
@@ -207,7 +207,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
     private int fill(RecyclerView.Recycler recycler, RecyclerView.State state, int delta) {
         int resultDelta = delta;
 
-        //为了可读性，分成四个方法
+        //为了可读性,分成四个方法
         switch (focusOrientation) {
             case FOCUS_LEFT:
                 resultDelta = fillHorizontalLeft(recycler, state, delta);
@@ -238,7 +238,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
      *
      * @param recycler
      * @param state
-     * @param dx       偏移量。手指从右向左滑动，dx > 0; 手指从左向右滑动，dx < 0;
+     * @param dx       偏移量 手指从右向左滑动 dx > 0; 手指从左向右滑动 dx < 0;
      */
     private int fillHorizontalLeft(RecyclerView.Recycler recycler, RecyclerView.State state,
                                    int dx) {
@@ -252,9 +252,9 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         }
 
         if (dx > 0) {
-            //滑动到只剩堆叠view，没有普通view了，说明已经到达右边界了
+            //滑动到只剩堆叠view,没有普通view了,说明已经到达右边界了
             if (mLastVisPos - mFirstVisPos <= maxLayerCount - 1) {
-                //因为scrollHorizontallyBy里加了一次dx，现在减回去
+                //因为scrollHorizontallyBy里加了一次dx,现在减回去
                 mHorizontalOffset -= dx;
                 dx = 0;
             }
@@ -270,19 +270,19 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         View tempView = null;
         int tempPosition = -1;
         if (onceCompleteScrollLength == -1) {
-            //因为mFirstVisPos在下面可能会被改变，所以用tempPosition暂存一下。
+            //因为mFirstVisPos在下面可能会被改变,所以用tempPosition暂存一下
             tempPosition = mFirstVisPos;
             tempView = recycler.getViewForPosition(tempPosition);
             measureChildWithMargins(tempView, 0, 0);
             onceCompleteScrollLength = getDecoratedMeasurementHorizontal(tempView) + normalViewGap;
         }
-        //当前"一次完整的聚焦滑动"所在的进度百分比.百分比增加方向为向着堆叠移动的方向（即如果为FOCUS_LEFT，从右向左移动fraction将从0%到100%）
+        //当前"一次完整的聚焦滑动"所在的进度百分比.百分比增加方向为向着堆叠移动的方向（即如果为FOCUS_LEFT,从右向左移动fraction将从0%到100%）
         float fraction =
                 (Math.abs(mHorizontalOffset) % onceCompleteScrollLength) / (onceCompleteScrollLength * 1.0f);
 
-        //堆叠区域view偏移量。在一次完整的聚焦滑动期间，其总偏移量是一个layerPadding的距离
+        //堆叠区域view偏移量 在一次完整的聚焦滑动期间,其总偏移量是一个layerPadding的距离
         float layerViewOffset = layerPadding * fraction;
-        //普通区域view偏移量。在一次完整的聚焦滑动期间，其总位移量是一个onceCompleteScrollLength
+        //普通区域view偏移量 在一次完整的聚焦滑动期间,其总位移量是一个onceCompleteScrollLength
         float normalViewOffset = onceCompleteScrollLength * fraction;
         boolean isLayerViewOffsetSet = false;
         boolean isNormalViewOffsetSet = false;
@@ -437,7 +437,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
 
         //修正第一个可见的view：mFirstVisPos。已经滑动了多少个完整的onceCompleteScrollLength就代表滑动了多少个item
         mFirstVisPos = (int) Math.floor(Math.abs(mHorizontalOffset) / onceCompleteScrollLength); //向下取整
-        //临时将mLastVisPos赋值为getItemCount() - 1，放心，下面遍历时会判断view是否已溢出屏幕，并及时修正该值并结束布局
+        //临时将mLastVisPos赋值为getItemCount() - 1，放心,下面遍历时会判断view是否已溢出屏幕，并及时修正该值并结束布局
         mLastVisPos = getItemCount() - 1;
 
 
@@ -458,7 +458,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 View item;
 
                 if (i == tempPosition && tempView != null) {
-                    //如果初始化数据时已经取了一个临时view，可别浪费了！
+                    //如果初始化数据时已经取了一个临时view,可别浪费了
                     item = tempView;
                 } else {
                     item = recycler.getViewForPosition(i);
@@ -485,10 +485,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 r = (int) (startX);
                 b = getPaddingTop() + getDecoratedMeasurementVertical(item);
                 layoutDecoratedWithMargins(item, l, t, r, b);
-
-
             } else {//属于普通区域
-
                 View item = recycler.getViewForPosition(i);
                 addView(item);
                 measureChildWithMargins(item, 0, 0);
@@ -516,7 +513,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 b = getPaddingTop() + getDecoratedMeasurementVertical(item);
                 layoutDecoratedWithMargins(item, l, t, r, b);
 
-                //判断下一个view的布局位置是不是已经超出屏幕了，若超出，修正mLastVisPos并跳出遍历
+                //判断下一个view的布局位置是不是已经超出屏幕了,若超出,修正mLastVisPos并跳出遍历
                 if (startX - onceCompleteScrollLength < getPaddingLeft()) {
                     mLastVisPos = i;
                     break;
@@ -561,19 +558,19 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         View tempView = null;
         int tempPosition = -1;
         if (onceCompleteScrollLength == -1) {
-            //因为mFirstVisPos在下面可能会被改变，所以用tempPosition暂存一下。
+            //因为mFirstVisPos在下面可能会被改变,所以用tempPosition暂存一下
             tempPosition = mFirstVisPos;
             tempView = recycler.getViewForPosition(tempPosition);
             measureChildWithMargins(tempView, 0, 0);
             onceCompleteScrollLength = getDecoratedMeasurementVertical(tempView) + normalViewGap;
         }
-        //当前"一次完整的聚焦滑动"所在的进度百分比.百分比增加方向为向着堆叠移动的方向（即如果为FOCUS_LEFT，从右向左移动fraction将从0%到100%）
+        //当前"一次完整的聚焦滑动"所在的进度百分比.百分比增加方向为向着堆叠移动的方向（即如果为FOCUS_LEFT,从右向左移动fraction将从0%到100%）
         float fraction =
                 (Math.abs(mVerticalOffset) % onceCompleteScrollLength) / (onceCompleteScrollLength * 1.0f);
 
-        //堆叠区域view偏移量。在一次完整的聚焦滑动期间，其总偏移量是一个layerPadding的距离
+        //堆叠区域view偏移量。在一次完整的聚焦滑动期间,其总偏移量是一个layerPadding的距离
         float layerViewOffset = layerPadding * fraction;
-        //普通区域view偏移量。在一次完整的聚焦滑动期间，其总位移量是一个onceCompleteScrollLength
+        //普通区域view偏移量。在一次完整的聚焦滑动期间,其总位移量是一个onceCompleteScrollLength
         float normalViewOffset = onceCompleteScrollLength * fraction;
         boolean isLayerViewOffsetSet = false;
         boolean isNormalViewOffsetSet = false;
@@ -581,7 +578,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         //修正第一个可见的view：mFirstVisPos。已经滑动了多少个完整的onceCompleteScrollLength就代表滑动了多少个item
         mFirstVisPos = (int) Math.floor(Math.abs(mVerticalOffset) / onceCompleteScrollLength);
         //向下取整
-        //临时将mLastVisPos赋值为getItemCount() - 1，放心，下面遍历时会判断view是否已溢出屏幕，并及时修正该值并结束布局
+        //临时将mLastVisPos赋值为getItemCount() - 1，放心,下面遍历时会判断view是否已溢出屏幕,并及时修正该值并结束布局
         mLastVisPos = getItemCount() - 1;
 
 
@@ -602,7 +599,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 View item;
 
                 if (i == tempPosition && tempView != null) {
-                    //如果初始化数据时已经取了一个临时view，可别浪费了！
+                    //如果初始化数据时已经取了一个临时view,可别浪费了
                     item = tempView;
                 } else {
                     item = recycler.getViewForPosition(i);
@@ -630,9 +627,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 b = (int) (startY + getDecoratedMeasurementVertical(item));
                 layoutDecoratedWithMargins(item, l, t, r, b);
 
-
             } else {//属于普通区域
-
                 View item = recycler.getViewForPosition(i);
                 addView(item);
                 measureChildWithMargins(item, 0, 0);
@@ -642,7 +637,6 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                     startY -= normalViewOffset;
                     isNormalViewOffsetSet = true;
                 }
-
 
                 if (transitionListeners != null && !transitionListeners.isEmpty()) {
                     for (TransitionListener transitionListener : transitionListeners) {
@@ -661,7 +655,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 b = (int) (startY + getDecoratedMeasurementVertical(item));
                 layoutDecoratedWithMargins(item, l, t, r, b);
 
-                //判断下一个view的布局位置是不是已经超出屏幕了，若超出，修正mLastVisPos并跳出遍历
+                //判断下一个view的布局位置是不是已经超出屏幕了,若超出,修正mLastVisPos并跳出遍历
                 if (startY + onceCompleteScrollLength > getHeight() - getPaddingBottom()) {
                     mLastVisPos = i;
                     break;
@@ -709,27 +703,27 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         View tempView = null;
         int tempPosition = -1;
         if (onceCompleteScrollLength == -1) {
-            //因为mFirstVisPos在下面可能会被改变，所以用tempPosition暂存一下。
+            //因为mFirstVisPos在下面可能会被改变,所以用tempPosition暂存一下
             tempPosition = mFirstVisPos;
             tempView = recycler.getViewForPosition(tempPosition);
             measureChildWithMargins(tempView, 0, 0);
             onceCompleteScrollLength = getDecoratedMeasurementVertical(tempView) + normalViewGap;
         }
-        //当前"一次完整的聚焦滑动"所在的进度百分比.百分比增加方向为向着堆叠移动的方向（即如果为FOCUS_LEFT，从右向左移动fraction将从0%到100%）
+        //当前"一次完整的聚焦滑动"所在的进度百分比.百分比增加方向为向着堆叠移动的方向（即如果为FOCUS_LEFT,从右向左移动fraction将从0%到100%）
         float fraction =
                 (Math.abs(mVerticalOffset) % onceCompleteScrollLength) / (onceCompleteScrollLength * 1.0f);
 
-        //堆叠区域view偏移量。在一次完整的聚焦滑动期间，其总偏移量是一个layerPadding的距离
+        //堆叠区域view偏移量。在一次完整的聚焦滑动期间,其总偏移量是一个layerPadding的距离
         float layerViewOffset = layerPadding * fraction;
-        //普通区域view偏移量。在一次完整的聚焦滑动期间，其总位移量是一个onceCompleteScrollLength
+        //普通区域view偏移量。在一次完整的聚焦滑动期间,其总位移量是一个onceCompleteScrollLength
         float normalViewOffset = onceCompleteScrollLength * fraction;
         boolean isLayerViewOffsetSet = false;
         boolean isNormalViewOffsetSet = false;
 
-        //修正第一个可见的view：mFirstVisPos。已经滑动了多少个完整的onceCompleteScrollLength就代表滑动了多少个item
+        //修正第一个可见的view：mFirstVisPos 已经滑动了多少个完整的onceCompleteScrollLength就代表滑动了多少个item
         mFirstVisPos = (int) Math.floor(Math.abs(mVerticalOffset) / onceCompleteScrollLength);
         //向下取整
-        //临时将mLastVisPos赋值为getItemCount() - 1，放心，下面遍历时会判断view是否已溢出屏幕，并及时修正该值并结束布局
+        //临时将mLastVisPos赋值为getItemCount() - 1, 放心,下面遍历时会判断view是否已溢出屏幕,并及时修正该值并结束布局
         mLastVisPos = getItemCount() - 1;
 
 
@@ -750,7 +744,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 View item;
 
                 if (i == tempPosition && tempView != null) {
-                    //如果初始化数据时已经取了一个临时view，可别浪费了！
+                    //如果初始化数据时已经取了一个临时view,可别浪费了
                     item = tempView;
                 } else {
                     item = recycler.getViewForPosition(i);
@@ -778,9 +772,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 b = (int) (startY);
                 layoutDecoratedWithMargins(item, l, t, r, b);
 
-
             } else {//属于普通区域
-
                 View item = recycler.getViewForPosition(i);
                 addView(item);
                 measureChildWithMargins(item, 0, 0);
@@ -808,7 +800,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
                 b = (int) (startY);
                 layoutDecoratedWithMargins(item, l, t, r, b);
 
-                //判断下一个view的布局位置是不是已经超出屏幕了，若超出，修正mLastVisPos并跳出遍历
+                //判断下一个view的布局位置是不是已经超出屏幕了,若超出,修正mLastVisPos并跳出遍历
                 if (startY - onceCompleteScrollLength < getPaddingTop()) {
                     mLastVisPos = i;
                     break;
@@ -875,11 +867,11 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
         super.onScrollStateChanged(state);
         switch (state) {
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                //当手指按下时，停止当前正在播放的动画
+                //当手指按下时,停止当前正在播放的动画
                 cancelAnimator();
                 break;
             case RecyclerView.SCROLL_STATE_IDLE:
-                //当列表滚动停止后，判断一下自动选中是否打开
+                //当列表滚动停止后,判断一下自动选中是否打开
                 if (isAutoSelect) {
                     //找到离目标落点最近的item索引
                     smoothScrollToPosition(findShouldSelectPosition());
@@ -906,7 +898,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
             remainder = (int) (Math.abs(mVerticalOffset) % onceCompleteScrollLength);
         }
 
-        if (remainder >= onceCompleteScrollLength / 2.0f) { //超过一半，应当选中下一项
+        if (remainder >= onceCompleteScrollLength / 2.0f) { //超过一半,应当选中下一项
             if (mFirstVisPos + 1 <= getItemCount() - 1) {
                 return mFirstVisPos + 1;
             }
@@ -1176,8 +1168,6 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
 
 
     public static class Builder {
-
-
         int maxLayerCount;
         @FocusOrientation
         private int focusOrientation;
@@ -1312,7 +1302,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
 
 
     /**
-     * 滚动过程中view的变换监听接口。属于高级定制，暴露了很多关键布局数据。若定制要求不高，考虑使用{@link SimpleTransitionListener}
+     * 滚动过程中view的变换监听接口 属于高级定制,暴露了很多关键布局数据 若定制要求不高,考虑使用{@link SimpleTransitionListener}
      */
     public interface TransitionListener {
 
@@ -1360,7 +1350,7 @@ public class FocusLayoutManager extends RecyclerView.LayoutManager {
     }
 
     /**
-     * 简化版  滚动过程中view的变换监听接口。
+     * 简化版  滚动过程中view的变换监听接口
      */
     public static abstract class SimpleTransitionListener {
 
